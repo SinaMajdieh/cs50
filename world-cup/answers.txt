@@ -1,0 +1,19 @@
+Times:
+
+10 simulations: 0m0.010s
+100 simulations: 0m0.011s
+1000 simulations: 0m0.015s
+10000 simulations: 0m0.049s
+100000 simulations: 0m0.390s
+1000000 simulations: 0m3.884s
+
+Questions:
+
+Which predictions, if any, proved incorrect as you increased the number of simulations?: TODO
+
+With a small number of simulations Switzerland, Argentina and Spain seem to have a better chance of wining than Brazil which according to more simulations is not actually right also teams like Belgium have way higher chance of wining the tournoment in smaller number of simulations. 
+
+Suppose you're charged a fee for each second of compute time your program uses.
+After how many simulations would you call the predictions "good enough"?:
+
+It seems like the predictions stabilized after about 1000 simulations

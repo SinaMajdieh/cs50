@@ -1,0 +1,5 @@
+BY averaging the danceability, valence and energy of the 100 songs listed in the songs.db 
+AVG(danceability) = 0.71646 
+AVG(valence) = 0.484443 
+AVG(energy) = 0.65906
+by averaging above values we reach the value 0.619987 which we can asign to Audio Aura of a listener

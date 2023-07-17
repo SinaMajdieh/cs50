@@ -1,0 +1,48 @@
+.sin-bg-image{
+    background-image: url('images/coding-bg.jpg');
+
+    height: 100vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.sin-content{
+    margin: 5vh;
+}
+.sin-content h1,h2,h3,h4,h5,p,span{
+    color: rgba(255, 255, 255, 0.6);
+}
+.sin-content p,span{
+    font-size: 20px;
+}
+.sin-link {
+    text-decoration: none;
+}
+.sin-link:hover{
+    text-decoration: underline;
+    color: rgba(255, 255, 255, 0.6);
+}
+.sin-font{
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+.sin-padding-2vh{
+    padding: 2vh;
+}
+.sin-content-container{
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 2vh;
+}
+.sin-hidden{
+    display: none;
+}
+.sin-input, .sin-input:focus{
+    outline: none;
+    border: 0;
+    width: 10vh;
+    display: inline;
+    background-color: #212529;
+    color: rgba(255, 255, 255, 0.6);
+}
+

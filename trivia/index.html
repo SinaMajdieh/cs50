@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="styles.css" rel="stylesheet">
+        <title>Trivia!</title>
+        <script>
+            // TODO: Add code to check answers to questions
+            //wait for the content to load
+            document.addEventListener("DOMContentLoaded", function(){
+
+                //eventListener for when clicked on the correct answer button
+                let correct = document.querySelector(".correct");
+                correct.addEventListener("click", function(event){
+                    correct.style.backgroundColor = "green";
+                    document.querySelector("#feedback-multiple-choice").innerHTML = `Correct!`;
+                })
+
+                //eventListener for when clicked on the incorrect answer button
+                let incorrects = document.querySelectorAll(".incorrect");
+                for (let i = 0; i < incorrects.length; i++)
+                {
+                    incorrects[i].addEventListener("click", function(event){
+                        incorrects[i].style.backgroundColor = "red";
+                        document.querySelector("#feedback-multiple-choice").innerHTML = `Incorrect`;
+                    })
+                }
+
+                //eventListener for when clicked on the check button
+                let check = document.querySelector("#check");
+                check.addEventListener("click", function(event){
+                    let input = document.querySelector("input");
+                    if (input.value == "12")
+                    {
+                        input.style.backgroundColor = "green";
+                        document.querySelector("#feedback-free-response").innerHTML = `Correct!`;
+                    }
+                    else
+                    {
+                        input.style.backgroundColor = "red";
+                        document.querySelector("#feedback-free-response").innerHTML = `Incorrect`;
+                    }
+                })
+                
+            })
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <h1>Trivia!</h1>
+        </div>
+
+        <div class="container">
+            <div class="section">
+                <h2>Part 1: Multiple Choice </h2>
+                <hr>
+                <!-- TODO: Add multiple choice question here -->
+                <h3>
+                    What is "cynophobia"?
+                </h3>
+                <button class="incorrect">Fear of height</button>
+                <button class="correct">Fear of dogs</button>
+                <button class="incorrect">Fear of spiders</button>
+                <button class="incorrect">Fear of birds</button>
+
+                <p id="feedback-multiple-choice"></p>
+            </div>
+
+            <div class="section">
+                <h2>Part 2: Free Response</h2>
+                <hr>
+                <!-- TODO: Add free response question here -->
+                <h3>
+                    How many languages are written from right to left?
+                </h3>
+                <input type="text">
+                <button id="check">Check Answer</button>
+
+                <p id="feedback-free-response""></p>
+            </div>
+        </div>
+    </body>
+</html>

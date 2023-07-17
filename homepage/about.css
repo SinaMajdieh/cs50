@@ -1,0 +1,43 @@
+.img-1{
+    background-image: url('images/coding-bg.jpg');
+
+    height: 33vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.img-2{
+    background-image: url('images/guitar.jpg');
+
+    height: 33vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.img-3{
+    background-image: url('images/basketball.jpg');
+
+    height: 33vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.sin-margin-0{
+    margin: 0;
+}
+.sin-padding-0{
+    padding: 0;
+}
+p{
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.6);  
+}
+.sin-center-text{
+    position: absolute;
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+}
