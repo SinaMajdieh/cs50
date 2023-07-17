@@ -7,7 +7,7 @@ function initial()
 }
 function prompt_name()
 {
-    let name = "alice";
+    let name = "";
     while (name == "")
     {
         name = prompt("Greetings my friend :)\nMay I ask for your name?","")
