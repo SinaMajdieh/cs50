@@ -1,0 +1,66 @@
+Go, also known as Golang, is an open-source, compiled, and statically typed programming language designed by Google. It is built to be simple, high-performing, readable, and efficient.
+
+In this article, you'll learn:
+
+Where Go came from and where it is now,
+Why I think you should learn it,
+How to install and run it on Windows 10, and
+How to write your first "Hello World" program in Go
+Table of Contents
+What's the Name? Go or Golang?
+How Go Came into Existence
+Why you Should Learn Go
+How to Install and Run Go on Windows 10
+How to Write your First Hello World in Go
+Conclusion
+What's the Name? Go or Golang?
+You might hear the language called both Go and Golang, which might be confusing. I once thought they were names for different languages. But Golang is just another name for Go – and Go remains the official name.
+
+Golang came from the domain name of the Go official website, golang.org. Which is actually really helpful, because “Golang” is much more searchable than "Go" on Google. So it makes life a little easier for those who might be looking for information on the programming language.
+
+How Go Came into Existence
+The Go programming language was borne because things were getting much more complex in the codebases within Google.
+
+It was designed by Robert Griesemer, Rob Pike, and Ken Thompson, who all reportedly have a shared dislike for C++.
+
+Go was announced to the public in 2009, and it was made open source in 2012 when its first version, 1.0, was released.
+
+Go quickly rose in popularity and became many developers' first choice due to its simplicity, readability, efficiency, and concurrent nature. Concurrent means that it can run multiple tasks at the same time.
+
+Go is used for server-side (backend) programming, game development, cloud-based programming, and even Data Science. It is also popular for making command-line tools.
+
+Today, many tech giants use Go like Google, Netflix, Twitch, Ethereum, Dropbox, Kubernetes, Docker, Heroku, and lots more.
+
+There’s no surprise that the likes of Kubernetes, Docker, and Heroku are using Go because cloud-based programming is one of the main reasons why Go was designed.
+
+Why you Should Learn Go
+Easy Learning Curve
+Go is one of the simplest programming languages out there. It is easy to pick up especially if you already have knowledge of any other programming language. In my case, I learned the fundamentals of Go in one sitting.
+
+A lot of developers who use Go and are confident in their teaching abilities say that they can get an absolute beginner to build an app with Go in just a few hours.
+
+The simplicity of Go is one of the main reasons it jumped 5 places from the 10th to 5th most loved programming language according to the 2020 StackOverflow Developer Survey.
+
+Active Community and Good Documentation
+Go has solid and easy-to-read documentation. You can read the documentation on the official website.
+
+Apart from documentation, Go also has a supportive and active community behind it, so you can always get help when you are stuck.
+
+The hashtag #golang is commonly used on Twitter, so in case you get stuck, you can tweet your question and attached the hashtag to it.
+
+You Can Get a lot Done with Go
+Go is a multipurpose programming language, meaning you can use it for a number of things such as web development, data science, cloud computing, and more.
+
+If you want to have a career in cloud-based programming, you should consider learning Go, because platforms such as Amazon Web Services, Kubernetes, and Google Cloud Platform (GCP) all support Go.
+
+Attractive Wages
+According to the 2020 StackOverflow Developer Survey, Go developers are the third-highest paid after Perl and Scala with a median salary of $74K.
+
+This figure will probably continue to climb, because Go continues to gain more popularity every year and it is in demand. So, if you want to earn more money, you should consider learning Go.
+
+How to Install and Run Go on Windows 10
+To install Go on your Windows machine, you first have to download Go from the official website. It is available for all popular operating systems. Click on the one that correlates to your OS and install it.
+
+Step 1: Before installing Go, open up your command prompt, type “go” and hit enter. You can open the command prompt by entering “cmd” in the Windows Search bar, and then selecting the first app that shows up.
+
+When you enter “go” and hit enter, you should get a message that says “'go' is not recognized as an internal or external command, operable program or batch file”.

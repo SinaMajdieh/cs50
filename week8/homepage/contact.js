@@ -26,7 +26,7 @@ function sned()
             return
         }
     }
-    let result = `Thank you ${values["name"]} ${values["lastname"]}\nyour message : ${values["message"]} was sent to me :)\nand now I can contact you on ${values["emial"]} as well!`;
+    let result = `Thank you ${values["name"]} ${values["lastname"]}\nyour message : ${values["message"]} was sent to me :)\nand now I can contact you on ${values["email"]} as well!`;
     clear_form();
     alert(result);
 }

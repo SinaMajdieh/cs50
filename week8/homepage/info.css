@@ -1,0 +1,36 @@
+.sin-info{
+    max-width: 50%;
+    margin: auto;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.6);
+}
+.sin-content-container{
+    padding: 5rem;
+}
+.sin-c-image{
+    background-image: url('images/c.jpg');
+
+    height: 100vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.sin-python-image{
+    background-image: url('images/python.jpg');
+
+    height: 100vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.sin-go-image{
+    background-image: url('images/go.jpg');
+
+    height: 100vh; 
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
