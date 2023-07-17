@@ -1,3 +1,11 @@
+function clear_form()
+{
+    let contact_fields = document.querySelectorAll(".contact")
+    for (let i = 0; i < contact_fields.length; i++)
+    {
+        contact_fields[i].value = "";
+    }
+}
 function sned()
 {
     let values = {}; 
@@ -18,4 +26,7 @@ function sned()
             return
         }
     }
+    let result = `Thank you ${values["name"]} ${values["lastname"]}\nyour message : ${values["message"]} was sent to me :)\nand now I can contact you on ${values["emial"]} as well!`;
+    clear_form();
+    alert(result);
 }
