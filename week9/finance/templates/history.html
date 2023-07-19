@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    History
+{% endblock %}
+
+{% block main %}  
+    {% if exists == True %}
+        <div style="width: 75%; margin: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>DATE</th>
+                        <th>NAME</th>
+                        <th>SHARES</th>
+                        <th>PRICE</th>
+                        <th>TRANSACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions%}
+                        <tr>
+                            <td>{{ transaction["date"] }}</td>
+                            <td>{{ transaction["name"] }}</td>
+                            <td>{{ transaction["shares"] }}</td>
+                            <td>{{ transaction["price"] }}</td>
+                            <td>{{ transaction["transaction"] }}</td>
+                        </tr>
+                    {% endfor %}  
+                    
+        
+                </tbody>
+            </table>   
+        </div>  
+    {% else %}
+        No history of transactions
+    {% endif %}
+
+ 
+{% endblock %}

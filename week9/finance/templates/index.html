@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search for {{ symbol }}
+{% endblock %}
+
+{% block main %}
+    <div style="width: 75%; margin: auto;">
+        {% if exists == True %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for holding in holdings%}
+                    <tr>
+                        <td>{{ holding["symbol"] }}</td>
+                        <td>{{ holding["shares"] }}</td>
+                        <td>{{ holding["price"] }}</td>
+                        <td>{{ holding["total"] }}</td>
+                    </tr>
+                {% endfor %}  
+                
+    
+            </tbody>
+        </table>     
+        {% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Cash</th>
+                    <th>TOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ cash }}</td>
+                    <td>{{ total }}</td>
+                </tr>              
+            </tbody>
+        </table> 
+    </div>
+ 
+{% endblock %}

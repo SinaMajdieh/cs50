@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Search for {{ symbol }}
+{% endblock %}
+
+{% block main %}
+    {% if found%}
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>{{ stock["name"] }}</td>
+                        <td>{{ stock["price"] }}</td>
+                    </tr>              
+            </tbody>
+        </table>
+    {% else %}
+        No stocks for Search: {{ symbol }}
+    {% endif %}
+{% endblock %}
