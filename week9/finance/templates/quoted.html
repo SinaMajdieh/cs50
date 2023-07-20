@@ -5,22 +5,19 @@
 {% endblock %}
 
 {% block main %}
-    {% if found%}
-        <table>
-            <thead>
+    <!--<table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
                 <tr>
-                    <th>Symbol</th>
-                    <th>Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                    <tr>
-                        <td>{{ stock["name"] }}</td>
-                        <td>{{ stock["price"] }}</td>
-                    </tr>              
-            </tbody>
-        </table>
-    {% else %}
-        No stocks for Search: {{ symbol }}
-    {% endif %}
+                    <td>{{ stock["name"] }}</td>
+                    <td>{{ stock["price"] }}</td>
+                </tr>              
+        </tbody>
+    </table>-->
+    A share of {{ stock["name"] }} costs {{ stock["price"] | usd}}.
 {% endblock %}

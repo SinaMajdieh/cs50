@@ -3,8 +3,9 @@
     time_stamp TEXT NOT NULL,
     user_id INTEGER NOT NULL,
     symbol TEXT NOT NULL,
-    shares INTEGER NOT NULL,
+    shares INTEGER,
     type TEXT NOT NULL,
+    price REAL NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 CREATE TABLE holdings(

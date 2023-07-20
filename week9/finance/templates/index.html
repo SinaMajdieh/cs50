@@ -1,49 +1,66 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Search for {{ symbol }}
+    Home
 {% endblock %}
 
 {% block main %}
     <div style="width: 75%; margin: auto;">
-        {% if exists == True %}
-        <table>
+        <table class="table table-striped">
+            {% if exists == True %}
             <thead>
                 <tr>
-                    <th>Symbol</th>
-                    <th>Shares</th>
-                    <th>Price</th>
-                    <th>TOTAL</th>
+                    <th class="border-0 text-start">Symbol</th>
+                    <th class="border-0 text-end">Shares</th>
+                    <th class="border-0 text-end">Price</th>
+                    <th class="border-0 text-end">TOTAL</th>
+                    <th class="border-0 text-end">Buy</th>
+                    <th class="border-0 text-end">Sell</th>
                 </tr>
             </thead>
             <tbody>
                 {% for holding in holdings%}
                     <tr>
-                        <td>{{ holding["symbol"] }}</td>
-                        <td>{{ holding["shares"] }}</td>
-                        <td>{{ holding["price"] }}</td>
-                        <td>{{ holding["total"] }}</td>
+                        <td class="border-0 text-start">{{ holding["symbol"] }}</td>
+                        <td class="border-0 text-end">{{ holding["shares"] }}</td>
+                        <td class="border-0 text-end">{{ holding["price"] }}</td>
+                        <td class="border-0 text-end">{{ holding["total"] }}</td>
+                        <td class="border-0 text-end">
+                            <form style="display: inline;" action="/buy" method="post">
+                                <div class="mb-3" style="display: none;">
+                                    <input hidden style="display: none;" value="{{ holding["symbol"] }}" autocomplete="off"  class="form-control mx-auto w-auto" id="symbol" name="symbol" placeholder="Stock symbol" type="text">
+                                </div>
+                                <div style="display: inline;  width: 10%;" class="mb-3">
+                                    <input autocomplete="off"  style="display: inline;  width: 10%;" class="form-control mx-auto" id="shares" name="shares" placeholder="shares" type="number">
+                                </div>
+                                <button class="btn btn-primary" style="display: inline;" type="submit">Buy</button>
+                            </form>
+                        </td>
+                        <td class="border-0 text-end">
+                            <form style="display: inline;" action="/sell" method="post">
+                                <div class="mb-3" style="display: none;">
+                                    <input hidden style="display: none;" value="{{ holding["symbol"] }}" autocomplete="off"  class="form-control mx-auto w-auto" id="symbol" name="symbol" placeholder="Stock symbol" type="text">
+                                </div>
+                                <div style="display: inline;  width: 10%;" class="mb-3">
+                                    <input autocomplete="off"  style="display: inline;  width: 10%;" class="form-control mx-auto" id="shares" name="shares" placeholder="shares" type="number">
+                                </div>
+                                <button class="btn btn-danger" style="display: inline;" type="submit">Sell</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}  
-                
-    
-            </tbody>
-        </table>     
+            </tbody>     
         {% endif %}
-        <table>
-            <thead>
+            <tfoot>
                 <tr>
-                    <th>Cash</th>
-                    <th>TOTAL</th>
+                    <td class="border-0 fw-bold text-end" colspan="5">Cash</td>
+                    <td class="border-0 text-end">{{ cash }}</td>             
                 </tr>
-            </thead>
-            <tbody>
                 <tr>
-                    <td>{{ cash }}</td>
-                    <td>{{ total }}</td>
+                    <td class="border-0 fw-bold text-end" colspan="5">TOTAL</td>
+                    <td class="border-0 text-end">{{ total }}</td>
                 </tr>              
-            </tbody>
+            </tfoot>
         </table> 
     </div>
- 
 {% endblock %}
