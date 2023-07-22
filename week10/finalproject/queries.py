@@ -1,0 +1,5 @@
+GET_ALL_USERS_INFO_BY_USERNAME = "SELECT * FROM users WHERE username = ?;"
+INSERT_NEW_USER = "INSERT INTO users (username, hash) VALUES (?, ?);"
+INSERT_DESCRIPTION = "INSERT INTO description (name, lastname, email, age, user_id, country_id) VALUES (?, ?, ?, ?, ?, ?);"
+SELECT_ALL_COUNTRIES = "SELECT * FROM countries;"
+USER_ID_USER_COUNTRY = "SELECT countries.* FROM countries JOIN description ON countries.id=description.country_id WHERE description.user_id = ?;"
