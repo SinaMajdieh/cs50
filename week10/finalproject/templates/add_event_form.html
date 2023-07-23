@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+    <form action="/createevent" method="post" id="addevent">
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="titel" name="title" placeholder="titel" type="text">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="details" name="details" placeholder="details" type="text">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="date" name="date" placeholder="date" type="date">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="cap" name="cap" placeholder="cap" type="number" max="20">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="tags" id="tags" placeholder="tags" type="text" hidden value="">
+        </div>
+        {% for tag in tags %}
+        <input type="number" value="0" hidden id={{ tag["id"] }}>
+        <button class="btn btn-secondary tagsbtn" value={{ tag["id"] }} type="button" onclick="addtag(this)">{{ tag["title"] }}</button>
+        {% endfor %}
+        <button class="btn btn-primary" type="submit">Add event</button>
+    </form>
+    <script>
+
+        document.getElementById("addevent").addEventListener("submit", (e) => {
+            e.preventDefault();
+            let tagsbtn = document.querySelectorAll(".tagsbtn");
+            let tags = document.getElementById("tags");
+            for(let i = 0; i < tagsbtn.length; i++){
+                if (document.getElementById(tagsbtn[i].value).value == "1"){
+                    tags.value = tags.value + tagsbtn[i].value+";"
+                }          
+            }
+            document.getElementById("addevent").submit();
+          });
+        
+        function addtag(self){
+            let val = document.getElementById(self.value);
+            if (val.value == "0"){
+                self.classList.remove("btn-secondary");
+                self.classList.add("btn-success");
+                val.value = "1";
+            }
+            else if (val.value == "1"){
+                self.classList.remove("btn-success");
+                self.classList.add("btn-secondary");
+                val.value = "0";
+            }  
+        }
+    </script>
+{% endblock %}

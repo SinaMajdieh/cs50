@@ -1,10 +1,16 @@
+from datetime import datetime
 from flask import render_template
 import re
-
 
 def apology(message, code=400):
     """Render message as an apology to user."""       
     return render_template("apology.html", message=message), code
+
+
+def right_now():
+    now = datetime.now()
+    current_time = now.strftime("%d/%m/%Y %H:%M:%S")
+    return current_time
 
 
 def is_country_valid(id, countries):
@@ -47,6 +53,44 @@ def is_age_valid(age):
         return False
     # Ensure age is above 18
     if age >= 18:
+        return True
+    else:
+        return False
+    
+
+def are_tags_valid(ids, tags):
+    """Ensure tags are valid"""
+    # Ensure ids are integers
+    for i in range(len(ids)):
+        try:
+            ids[i] = int(ids[i])
+        except ValueError:
+            return False
+    
+    # Ensre all ids are valid
+    found = 0
+    for id in ids:
+        for tag in tags:
+            if id == tag["id"]:
+                found += 1
+    
+    
+    # Ensure all ids were found in tags
+    if found == len(ids):
+        return True
+    else:
+        return False
+    
+    
+
+def is_cap_valid(cap):
+    """Ensure cap is valid"""
+    # Ensure cap is an integer
+    try:
+        cap = int(cap)
+    except ValueError:
+        return False
+    if cap <= 20:
         return True
     else:
         return False

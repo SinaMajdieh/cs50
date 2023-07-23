@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My events
+{% endblock %}
+
+{% block main %}
+    {% if exists == True %}
+        {% for event in events%}
+            <h2>{{ event["title"] }}</h2>
+            <h3>{{ event["details"] }}</h3>
+            <input type="date" value={{ event["date"] }} readonly>
+            <p>enroled: {{ event["enroled"] }}</p>
+            <p>created on: {{ event["timestamp"] }}</p>
+        {% endfor %}
+    {% else %}
+        you haven't create any events, <a href="/createevent">create one now</a>
+    {% endif %}
+{% endblock %}
