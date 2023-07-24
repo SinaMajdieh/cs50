@@ -10,7 +10,7 @@
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="titel" name="title" placeholder="titel" type="text">
         </div>
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="details" name="details" placeholder="details" type="text">
+            <textarea autocomplete="off" autofocus class="form-control mx-auto w-auto" id="details" name="details" placeholder="details" type="text" cols="30" rows="10"></textarea>
         </div>
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="date" name="date" placeholder="date" type="date">
@@ -25,6 +25,7 @@
         <input type="number" value="0" hidden id={{ tag["id"] }}>
         <button class="btn btn-secondary tagsbtn" value={{ tag["id"] }} type="button" onclick="addtag(this)">{{ tag["title"] }}</button>
         {% endfor %}
+        <br>
         <button class="btn btn-primary" type="submit">Add event</button>
     </form>
     <script>

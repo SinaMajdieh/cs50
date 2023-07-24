@@ -12,7 +12,11 @@
             <input type="date" value={{ event["date"] }} readonly>
             <p>enroled: {{ event["enroled"] }}</p>
             <p>created on: {{ event["timestamp"] }}</p>
+            <a href="/myevents/{{ event["id"] }}"><button class="btn btn-warning btn-sm" type="button">edit</button></a>
+            <br>
         {% endfor %}
+        <br>
+        <a href="/createevent">create new event</a>
     {% else %}
         you haven't create any events, <a href="/createevent">create one now</a>
     {% endif %}

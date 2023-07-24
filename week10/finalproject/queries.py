@@ -4,14 +4,28 @@ GET_ALL_USERS_INFO_BY_USERNAME = "SELECT * FROM users WHERE username = ?;"
 INSERT_NEW_USER = "INSERT INTO users (username, hash) VALUES (?, ?);"
 
 # Query on events table
+event_columns = [
+    "id",
+    "title",
+    "country_id",
+    "creator_id",
+    "details",
+    "date",
+    "cap",
+    "enroled",
+    "state",
+    "timestamp",
+    "tags"
+    ]
 SELECT_ALL_EVENTS_BY_ID = """SELECT * FROM events WHERE id = ?;"""
-SELECT_ALL_EVENTS_BY_USER_ID = """SELECT * FROM events WHERE creator_id = ? ORDER BY date ASC;"""
+SELECT_ALL_EVENTS_BY_USER_ID = """SELECT * FROM events WHERE creator_id = ? ORDER BY timestamp DESC;"""
 INSERT_EVENT = """
 INSERT INTO events 
 (title, country_id, creator_id , details, date, cap, enroled, state, timestamp, tags) 
 VALUES
 (?, ?, ?, ?, ?, ?, ? ,?, ?, ?);
 """
+SELECT_BY_EVENT_ID_USER_ID = """SELECT * FROM events WHERE id = ? AND creator_id = ?;"""
 
 # Querry on entry table
 INSERT_ENTRY = """
@@ -31,3 +45,6 @@ USER_ID_USER_COUNTRY = "SELECT countries.* FROM countries JOIN description ON co
 
 # Query on tags table
 SELECT_ALL_TAGS = """SELECT * FROM tags;"""
+
+# QUery on stats table
+SELECT_ALL_STATS = """SELECT * FROM stats;"""

@@ -23,5 +23,6 @@ function addtag(){
         this.classList.add("btn-secondary");
         this.value = "0";
     }
+    document.gete
         
 }

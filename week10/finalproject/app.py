@@ -70,6 +70,9 @@ def register():
     return handleregister()
 
 
+# Routes delcleration for events
+
+
 @app.route("/myevents")
 @login_required
 def myevents():
@@ -88,3 +91,12 @@ def create_event():
     # user reached via get
     else:
         return handle_addevent_get()
+    
+
+@app.route("/myevents/<id>", methods=["GET", "POST"])
+@login_required
+def edit_event(id):
+    """Let's users edit events created by them"""
+    
+    # Handle event eddinting
+    return handle_edit_event(id)

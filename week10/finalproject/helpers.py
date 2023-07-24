@@ -94,3 +94,28 @@ def is_cap_valid(cap):
         return True
     else:
         return False
+    
+    
+def lookup_stat_key(msg, stats):
+    """Finds the id of a certain stat"""
+    for stat in stats:
+        if stat["text"] == msg:
+            return stat["id"]
+    # State message does not exist in the stats
+    return -1
+
+
+def lookup_country(id, countries):
+    """looks up a country by its id"""
+    try:
+        id = int(id)
+    except ValueError:
+        return {}
+    for country in countries:
+        if country["id"] == id:
+            return {
+                "id": id,
+                "name" : country["name"],
+            }
+    # State message does not exist in the stats
+    return {}
