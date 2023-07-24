@@ -3,11 +3,83 @@ from flask import flash, redirect, render_template, request, session
 from queries import *
 from database import *
 from datetime import date
-from helpers import apology, is_country_valid, is_email_valid, is_age_valid, are_tags_valid, is_cap_valid, right_now, lookup_stat_key, lookup_country
+from helpers import apology, is_email_valid, is_age_valid, is_cap_valid, right_now
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
 sqlite_path = "adventures_with_strangers.db"
+
+class Stats:
+    def __init__(self, value):
+        self.stats = value
+    def lookup_key(self, msg):
+        """Finds the id of a certain stat"""
+        for stat in self.stats:
+            if stat["text"] == msg:
+                return stat["id"]
+        # State message does not exist in the stats
+        return -1
+    
+class Tags:
+    def __init__(self, value):
+        self.tags = value
+    def are_valid(self, ids):
+        """Ensure tags are valid"""
+        # Ensure ids are integers
+        for i in range(len(ids)):
+            try:
+                ids[i] = int(ids[i])
+            except ValueError:
+                return False
+        
+        # Ensre all ids are valid
+        found = 0
+        for id in ids:
+            for tag in self.tags:
+                if id == tag["id"]:
+                    found += 1
+        
+        
+        # Ensure all ids were found in tags
+        if found == len(ids):
+            return True
+        else:
+            return False
+        
+
+class Countries:
+    def __init__(self, value):
+        self.countries = value
+        
+    def lookup(self, id):
+        """looks up a country by its id"""
+        try:
+            id = int(id)
+        except ValueError:
+            return {}
+        for country in self.countries:
+            if country["id"] == id:
+                return {
+                    "id": id,
+                    "name" : country["name"],
+                }
+        # State message does not exist in the stats
+        return {}
+    
+    def is_valid(self, id):
+        """Ensure country name exsist based on the list of dicts containing country id and name"""
+        # Ensure country id is not 0
+        if id == 0:
+            return False
+        # Ensure country id is an int
+        try:
+            id = int(id)
+        except ValueError:
+            return False
+        for country in self.countries:
+            if id == country["id"]:
+                return True
+        return False
 
 
 def initial_database():
@@ -15,9 +87,9 @@ def initial_database():
     load basic data from database into memmory"""
     global db, countries, tags, stats
     db = Sqlitedb(sqlite_path)
-    countries = db.load_countries()
-    tags = db.load_tags()
-    stats = db.load_stats()
+    countries = Countries(db.load_countries())
+    tags = Tags(db.load_tags())
+    stats = Stats(db.load_stats())
 
 # Handler functions for routes
 
@@ -30,12 +102,13 @@ def index_filter(form):
     # user provided the filter with a country
     if country:
         # Ensure country is valid by looking for it
-        result = lookup_country(country, countries)
+        result = countries.lookup(country)
         # Country was valid and it exists
         if result:
             # If country was set to global it means there are no filters for country
             if result["id"] == 0:
-                del form["country_id"]
+                if "country_id" in form:
+                    del form["country_id"]
             # Set country id to the filtered country id
             else:
                 form["country_id"] = result["id"]       
@@ -43,7 +116,7 @@ def index_filter(form):
             form["default_country"] = result
         # Country was not valid so setting default country to 0 which is global
         else:
-            form["default_country"] = lookup_country(0, countries)
+            form["default_country"] = countries.lookup(0)
     # Date was provided as a filter
     if date:
         form["date"] = date
@@ -60,22 +133,23 @@ def handleindex():
             "country_id": session["user_country"]["id"],
             "date": date.today(),
             "default_country": session["user_country"],
+            "state": stats.lookup_key("open"),
         }
         form = index_filter(form)
         events = db.getEventsCustom(form, desc=True)
-        return render_template("index.html", countries=countries, defaultcountry=form["default_country"], date=form["date"], events=events)
+        return render_template("index.html", countries=countries.countries, defaultcountry=form["default_country"], date=form["date"], events=events)
     # User has not logged in
     else:
         # country id 0 belong to global
         # apply filter
         form = {
-            "country_id": 0,
             "date": date.today(),
-            "default_country": lookup_country(0, countries),
+            "default_country": countries.lookup(0),
+            "state": stats.lookup_key("open"),
         }
         form = index_filter(form)
         events = db.getEventsCustom(form, desc=True)
-        return render_template("index.html", countries=countries, defaultcountry=form["default_country"], date=form["date"], events=events)
+        return render_template("index.html", countries=countries.countries, defaultcountry=form["default_country"], date=form["date"], events=events)
 
 
 # login, log out, register handler(s)
@@ -145,7 +219,7 @@ def handleregister():
                 return apology("Must provide all the information")
         
         # Ensure user provided valid email, age, and country
-        if not is_country_valid(form["country"], countries):
+        if not countries.is_valid(form["country"]):
             return apology("Country field was not filled correctly")
         if not is_email_valid(form["email"]):
             return apology("Your email pattern is not correct")
@@ -179,12 +253,12 @@ def handleregister():
         return redirect("/")
     # User reached via GET
     else:
-        return render_template("register.html", countries=countries)
+        return render_template("register.html", countries=countries.countries)
     
 
 # events handler(s)
 def handlemyevents():
-    events = db.getEventByUserId(session["user_id"])
+    events = db.getEventByUserId(session["user_id"], stats.lookup_key("open"))
     return render_template("myevents.html", events=events, exists=bool(events))
 
 
@@ -203,7 +277,7 @@ def handle_addevent_post():
         "date": request.form.get("date"),
         "cap": request.form.get("cap"),
         "enroled": 1,
-        "state": lookup_stat_key("open", stats),
+        "state": stats.lookup_key("open"),
         "timestamp" : right_now(),
         "tags": request.form.get("tags"),  
     }
@@ -214,7 +288,7 @@ def handle_addevent_post():
             return apology("Make sure to fill out all the fields")
         
     # Ensure tags and cap are valid
-    if not are_tags_valid([tag_id for tag_id in form["tags"].split(';') if tag_id != ""], tags):
+    if not tags.are_valid([tag_id for tag_id in form["tags"].split(';') if tag_id != ""]):
         return apology("There is something wrong with tags")
     if not is_cap_valid:
         return apology("There is something wrong with caps")
@@ -241,27 +315,39 @@ def handle_addevent_get():
     User has reached via GET
     Submittion from should be displayed to user
     """
-    return render_template("add_event_form.html", tags=tags)
+    return render_template("add_event_form.html", tags=tags.tags)
 
 
 def handle_edit_event(id):
     """Handle user request to edit an event created by them"""
     
     # Ensure event was created by the user
-    if len(db.eventByIdUserId(id, session["user_id"])) == 0:
+    if len(db.eventByIdUserId(id, session["user_id"], stats.lookup_key("open"))) == 0:
         return apology("You dont have access to this event or it does not exist")
     # event was created by user
     else:
-        event = db.getEventById(id)[0]
+        event = db.getEventById(id, stats.lookup_key("open"))[0]
         # User reached via POST
         if request.method == "POST":
+            # User wants to delete the event
+            if request.form.get("delete") == "1":
+                print("delete", file=sys.stderr)
+                # Changing the state of the event to deleted
+                delete_state = stats.lookup_key("deleted")
+                db.changeEventState(id, state_id=delete_state)
+                
+                # Flash the user
+                flash("event deleted")
+                
+                # Redirect to the myevents page
+                return redirect("/myevents") 
             # Extracting information sent via POST form
             form = {
                 "title": request.form.get("title"),
                 "details": request.form.get("details"),
                 "date": request.form.get("date"),
                 "cap": request.form.get("cap"),
-                "state": lookup_stat_key("open", stats),
+                "state": stats.lookup_key("open"),
                 "tags": request.form.get("tags"),  
             }       
             # Validating form
@@ -271,7 +357,7 @@ def handle_edit_event(id):
                     return apology("Make sure to fill out all the fields")
                 
             # Ensure tags and cap are valid
-            if not are_tags_valid([tag_id for tag_id in form["tags"].split(';') if tag_id != ""], tags):
+            if not tags.are_valid([tag_id for tag_id in form["tags"].split(';') if tag_id != ""]):
                 return apology("There is something wrong with tags")
             if not is_cap_valid:
                 return apology("There is something wrong with caps")
@@ -316,4 +402,4 @@ def handle_edit_event(id):
             }
             
             # Prompt the user for edit information
-            return render_template("edit_event_form.html", form=form, tags=tags)
+            return render_template("edit_event_form.html", form=form, tags=tags.tags)

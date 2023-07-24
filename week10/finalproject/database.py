@@ -27,13 +27,13 @@ class Sqlitedb:
     # Functions on events table
     
     # Querry events table for all the columns where event id equals the id
-    def getEventById(self, id):
-        return self.db.execute(SELECT_ALL_EVENTS_BY_ID, id)
+    def getEventById(self, id, state):
+        return self.db.execute(SELECT_ALL_EVENTS_BY_ID, id, state)
     
     
     # Query events table for all the columns where creator id equals the id
-    def getEventByUserId(self, id):
-        return self.db.execute(SELECT_ALL_EVENTS_BY_USER_ID, id)
+    def getEventByUserId(self, id, state):
+        return self.db.execute(SELECT_ALL_EVENTS_BY_USER_ID, id, state)
     
     
     # Query events table to insert a new row of data in format of a dict    
@@ -53,8 +53,8 @@ class Sqlitedb:
     
     
     # Query events table for all columns where id and creator id are given
-    def eventByIdUserId(self, id, creator_id):
-        return self.db.execute(SELECT_BY_EVENT_ID_USER_ID, id, creator_id)
+    def eventByIdUserId(self, id, creator_id, state):
+        return self.db.execute(SELECT_BY_EVENT_ID_USER_ID, id, creator_id, state)
     
     
     # Query events table for all the columns where country id is given
@@ -92,6 +92,11 @@ class Sqlitedb:
             return True
         except:
             return False
+
+
+    # Delete an event (actually updating the state to delete) will not remove any rows
+    def changeEventState(self, id, state_id):
+        return self.db.execute(DELETE_EVENT, state_id, id)
 
     # Functions on entry table
     def insertEntry(self, form):

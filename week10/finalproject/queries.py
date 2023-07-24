@@ -17,15 +17,17 @@ event_columns = [
     "timestamp",
     "tags"
     ]
-SELECT_ALL_EVENTS_BY_ID = """SELECT * FROM events WHERE id = ?;"""
-SELECT_ALL_EVENTS_BY_USER_ID = """SELECT * FROM events WHERE creator_id = ? ORDER BY timestamp DESC;"""
+SELECT_ALL_EVENTS_BY_ID = """SELECT * FROM events WHERE id = ? AND state = ?;"""
+SELECT_ALL_EVENTS_BY_USER_ID = """SELECT * FROM events WHERE creator_id = ? AND state = ? ORDER BY timestamp DESC;"""
 INSERT_EVENT = """
 INSERT INTO events 
 (title, country_id, creator_id , details, date, cap, enroled, state, timestamp, tags) 
 VALUES
 (?, ?, ?, ?, ?, ?, ? ,?, ?, ?);
 """
-SELECT_BY_EVENT_ID_USER_ID = """SELECT * FROM events WHERE id = ? AND creator_id = ?;"""
+SELECT_BY_EVENT_ID_USER_ID = """SELECT * FROM events WHERE id = ? AND creator_id = ? AND state = ?;"""
+# Will not remove any rows just update the state
+DELETE_EVENT = """UPDATE events SET state = ? WHERE id = ?;"""
 
 # Querry on entry table
 INSERT_ENTRY = """

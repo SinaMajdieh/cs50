@@ -26,7 +26,9 @@
         <button class="btn btn-secondary tagsbtn" id="btn{{ tag["id"] }}" value={{ tag["id"] }}  type="button" onclick="addtag(this)">{{ tag["title"] }}</button>
         {% endfor %}
         <br>
-        <button class="btn btn-primary" type="submit">update</button>
+        <button class="btn btn-primary" type="submit">Update</button>
+        <input name="delete" id="delete" hidden value="0">
+        <button class="btn btn-danger" type="button" onclick="deleteevent()">Delete</button>
     </form>
     <script>
         window.addEventListener("load", (event) => {
@@ -71,6 +73,11 @@
                 self.classList.add("btn-secondary");
                 val.value = "0";
             }  
+        }
+
+        function deleteevent(){
+            document.getElementById("delete").value = "1";
+            document.getElementById("addevent").submit();
         }
     </script>
 {% endblock %}

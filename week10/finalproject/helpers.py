@@ -13,20 +13,20 @@ def right_now():
     return current_time
 
 
-def is_country_valid(id, countries):
-    """Ensure country name exsist based on the list of dicts containing country id and name"""
-    # Ensure country id is not 0
-    if id == 0:
-        return False
-    # Ensure country id is an int
-    try:
-        id = int(id)
-    except ValueError:
-        return False
-    for country in countries:
-        if id == country["id"]:
-            return True
-    return False
+# def is_country_valid(id, countries):
+#     """Ensure country name exsist based on the list of dicts containing country id and name"""
+#     # Ensure country id is not 0
+#     if id == 0:
+#         return False
+#     # Ensure country id is an int
+#     try:
+#         id = int(id)
+#     except ValueError:
+#         return False
+#     for country in countries:
+#         if id == country["id"]:
+#             return True
+#     return False
     
 def is_email_valid(email):
     """Ensure email is valid"""
@@ -58,28 +58,28 @@ def is_age_valid(age):
         return False
     
 
-def are_tags_valid(ids, tags):
-    """Ensure tags are valid"""
-    # Ensure ids are integers
-    for i in range(len(ids)):
-        try:
-            ids[i] = int(ids[i])
-        except ValueError:
-            return False
+# def are_tags_valid(ids, tags):
+#     """Ensure tags are valid"""
+#     # Ensure ids are integers
+#     for i in range(len(ids)):
+#         try:
+#             ids[i] = int(ids[i])
+#         except ValueError:
+#             return False
     
-    # Ensre all ids are valid
-    found = 0
-    for id in ids:
-        for tag in tags:
-            if id == tag["id"]:
-                found += 1
+#     # Ensre all ids are valid
+#     found = 0
+#     for id in ids:
+#         for tag in tags:
+#             if id == tag["id"]:
+#                 found += 1
     
     
-    # Ensure all ids were found in tags
-    if found == len(ids):
-        return True
-    else:
-        return False
+#     # Ensure all ids were found in tags
+#     if found == len(ids):
+#         return True
+#     else:
+#         return False
     
     
 
@@ -96,26 +96,26 @@ def is_cap_valid(cap):
         return False
     
     
-def lookup_stat_key(msg, stats):
-    """Finds the id of a certain stat"""
-    for stat in stats:
-        if stat["text"] == msg:
-            return stat["id"]
-    # State message does not exist in the stats
-    return -1
+# def lookup_stat_key(msg, stats):
+#     """Finds the id of a certain stat"""
+#     for stat in stats:
+#         if stat["text"] == msg:
+#             return stat["id"]
+#     # State message does not exist in the stats
+#     return -1
 
 
-def lookup_country(id, countries):
-    """looks up a country by its id"""
-    try:
-        id = int(id)
-    except ValueError:
-        return {}
-    for country in countries:
-        if country["id"] == id:
-            return {
-                "id": id,
-                "name" : country["name"],
-            }
-    # State message does not exist in the stats
-    return {}
+# def lookup_country(id, countries):
+#     """looks up a country by its id"""
+#     try:
+#         id = int(id)
+#     except ValueError:
+#         return {}
+#     for country in countries:
+#         if country["id"] == id:
+#             return {
+#                 "id": id,
+#                 "name" : country["name"],
+#             }
+#     # State message does not exist in the stats
+#     return {}
