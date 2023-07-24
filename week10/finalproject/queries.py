@@ -18,6 +18,16 @@ event_columns = [
     "tags"
     ]
 SELECT_ALL_EVENTS_BY_ID = """SELECT * FROM events WHERE id = ? AND state = ?;"""
+SELECT_ALL_EVENTS_BY_ID_JOIND_COUNTRIES = """
+SELECT events.*, countries.name AS country_name FROM events 
+JOIN countries ON events.country_id=countries.id
+WHERE events.id = ? AND events.state = ?;
+"""
+SELECT_ALL_EVENTS_BY_ID_JOINED_USERS = """
+SELECT events.*, users.username FROM events
+JOIN users ON events.creator_id=users.id
+WHERE events.id = ? AND state = ?;
+"""
 SELECT_ALL_EVENTS_BY_USER_ID = """SELECT * FROM events WHERE creator_id = ? AND state = ? ORDER BY timestamp DESC;"""
 INSERT_EVENT = """
 INSERT INTO events 
@@ -28,14 +38,41 @@ VALUES
 SELECT_BY_EVENT_ID_USER_ID = """SELECT * FROM events WHERE id = ? AND creator_id = ? AND state = ?;"""
 # Will not remove any rows just update the state
 DELETE_EVENT = """UPDATE events SET state = ? WHERE id = ?;"""
+SELECT_EVENTS_USER_ENROLED = """
+SELECT events.* FROM events JOIN
+entry ON events.id=entry.event_id WHERE entry.user_id = ?;
+"""
 
 # Querry on entry table
+entry_columns = [
+    "id",
+    "user_id",
+    "event_id",
+    "timestamp",
+]
 INSERT_ENTRY = """
 INSERT INTO entry 
 (user_id, event_id, timestamp)
 VALUES
 (?, ?, ?);
 """ 
+SELECT_ALL_ENTRIES_BY_EVENT_ID_JOINED_USERS = """
+SELECT entry.*, users.username,
+    IIF(entry.user_id = ?, 
+            1,
+            2 
+        ) display
+FROM entry
+JOIN users ON entry.user_id=users.id
+JOIN events ON entry.event_id=events.id
+WHERE entry.event_id = ? AND events.state = ? ORDER BY timestamp DESC;
+"""
+SELECT_EVENTS_USER_ENROLED = """
+SELECT events.* FROM events
+JOIN entry ON events.id = entry.event_id
+WHERE entry.user_id = ? AND events.state = ?;
+"""
+
 
 # Query on description table
 INSERT_DESCRIPTION = "INSERT INTO description (name, lastname, email, age, user_id, country_id) VALUES (?, ?, ?, ?, ?, ?);"

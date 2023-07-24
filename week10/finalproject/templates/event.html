@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Events : {{ event["title"] }}
+{% endblock %}
+
+{% block main %}
+    <h2>{{ event["title"] }}</h2>
+    <h3>{{ event["details"] }}</h3>
+    <input type="date" value={{ event["date"] }} readonly>
+    <p>enroled: {{ event["enroled"] }} / {{ event["cap"] }}</p>
+    <p>created on: {{ event["timestamp"] }}</p>
+    <p>Country: {{ event["country_name"] }}</p>
+    {% if creator %}
+        <a href="/myevents/{{ event["id"] }}"><button class="btn btn-warning btn-sm" type="button">edit</button></a>
+        <a href="/leave/{{ event["id"] }}"><button class="btn btn-danger btn-sm" type="button">leave</button></a>
+    {% elif enroled %}
+        <a href="/leave/{{ event["id"] }}"><button class="btn btn-danger btn-sm" type="button">leave</button></a>
+    {% else %}
+        <a href="/enrol/{{ event["id"] }}"><button class="btn btn-warning btn-sm" type="button">enrol</button></a>
+    {% endif %}
+    <br> 
+    {% if enroled or creator %}
+        {% for entry in entries %}
+            {% if entry["user_id"] == user_id %}
+                you enroled on {{ entry["timestamp"]}}!
+                
+            {% else %}
+                {{ entry["username"] }} enroled on {{ entry["timestamp"]}}!
+            {% endif %}
+            <br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

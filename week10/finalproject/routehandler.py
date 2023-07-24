@@ -136,7 +136,7 @@ def handleindex():
             "state": stats.lookup_key("open"),
         }
         form = index_filter(form)
-        events = db.getEventsCustom(form, desc=True)
+        events = db.getEventsUserEnroledAndAvailable(session["user_id"], form, desc=True, joinedCountries=True, joinedCreator=True)
         return render_template("index.html", countries=countries.countries, defaultcountry=form["default_country"], date=form["date"], events=events)
     # User has not logged in
     else:
@@ -148,7 +148,7 @@ def handleindex():
             "state": stats.lookup_key("open"),
         }
         form = index_filter(form)
-        events = db.getEventsCustom(form, desc=True)
+        events = db.getEventsCustom(form, desc=True, joinedCountries=True, joinedCreator=True)
         return render_template("index.html", countries=countries.countries, defaultcountry=form["default_country"], date=form["date"], events=events)
 
 
@@ -318,6 +318,47 @@ def handle_addevent_get():
     return render_template("add_event_form.html", tags=tags.tags)
 
 
+def delete_event(id):
+    # Changing the state of the event to deleted
+    delete_state = stats.lookup_key("deleted")
+    db.changeEventState(id, state_id=delete_state)
+    
+    # Flash the user
+    flash("event deleted")
+    
+    # Redirect to the myevents page
+    return redirect("/myevents") 
+
+
+def validate_edited_form(form, event):
+    # Ensure user provided all the required fields
+    for key in form:
+        if not form[key]:
+            return apology("Make sure to fill out all the fields")
+        
+    # Ensure tags and cap are valid
+    if not tags.are_valid([tag_id for tag_id in form["tags"].split(';') if tag_id != ""]):
+        return apology("There is something wrong with tags")
+    if not is_cap_valid:
+        return apology("There is something wrong with caps")
+    
+    # Ignore fields that havent been edited and keep track of how many changes
+    ignored_keys = []
+    for key in form:
+        if str(form[key]) == str(event[key]):
+            ignored_keys.append(key)
+            
+    # Ensure user has chnaged one attribute at least
+    if len(ignored_keys) == len(form):
+        return apology("You havent changed anything!")
+    
+    # Delete ignored keys from the form
+    for key in ignored_keys:
+        del form[key]
+        
+    return form
+
+
 def handle_edit_event(id):
     """Handle user request to edit an event created by them"""
     
@@ -331,16 +372,7 @@ def handle_edit_event(id):
         if request.method == "POST":
             # User wants to delete the event
             if request.form.get("delete") == "1":
-                print("delete", file=sys.stderr)
-                # Changing the state of the event to deleted
-                delete_state = stats.lookup_key("deleted")
-                db.changeEventState(id, state_id=delete_state)
-                
-                # Flash the user
-                flash("event deleted")
-                
-                # Redirect to the myevents page
-                return redirect("/myevents") 
+                delete_event(id)
             # Extracting information sent via POST form
             form = {
                 "title": request.form.get("title"),
@@ -351,30 +383,7 @@ def handle_edit_event(id):
                 "tags": request.form.get("tags"),  
             }       
             # Validating form
-            # Ensure user provided all the required fields
-            for key in form:
-                if not form[key]:
-                    return apology("Make sure to fill out all the fields")
-                
-            # Ensure tags and cap are valid
-            if not tags.are_valid([tag_id for tag_id in form["tags"].split(';') if tag_id != ""]):
-                return apology("There is something wrong with tags")
-            if not is_cap_valid:
-                return apology("There is something wrong with caps")
-            
-            # Ignore fields that havent been edited and keep track of how many changes
-            ignored_keys = []
-            for key in form:
-                if str(form[key]) == str(event[key]):
-                    ignored_keys.append(key)
-                    
-            # Ensure user has chnaged one attribute at least
-            if len(ignored_keys) == len(form):
-                return apology("You havent changed anything!")
-            
-            # Delete ignored keys from the form
-            for key in ignored_keys:
-                del form[key]
+            form = validate_edited_form(form, event)
             
             # Querry update for the event
             result = db.updateEventCustomById(id, form)
@@ -403,3 +412,102 @@ def handle_edit_event(id):
             
             # Prompt the user for edit information
             return render_template("edit_event_form.html", form=form, tags=tags.tags)
+ 
+ 
+def handle_events():
+    """
+    Habdle events
+    Show user all events they are a part of
+    """
+    events = db.getEventsUserEnroled(session["user_id"], stats.lookup_key("open"))
+    
+    # Render the results
+    return render_template("events.html", events=events)
+ 
+def is_user_event_creator(event_id) -> bool:
+    creator_form = {
+        "creator_id": session["user_id"],
+        "id": event_id,
+    }
+    rows = db.getEventsCustom(creator_form)
+    if len(rows) != 0:
+        return True
+    return False
+
+
+def is_user_enroled_in_event(event_id) -> bool:
+    enrol_form = {
+        "user_id": session["user_id"],
+        "event_id": event_id,
+    }
+    rows = db.getEntryCustome(enrol_form)
+    if len(rows) != 0:
+        return True
+    return False
+ 
+
+def handle_event(id):
+    """Handle event"""
+    # Query for event 
+    event = db.getEventById(id, stats.lookup_key("open"), joinedCountries=True)
+    print(event, file=sys.stderr)
+    
+    # Ensure event exists
+    if len(event) == 0:
+        return apology("event was not found")
+    
+    # user is creator
+    creator = is_user_event_creator(id)
+    enroled = True
+
+    if not creator:
+      enroled = is_user_enroled_in_event(id)
+    # user is enroled
+    
+    
+    # Query for entries
+    entries = []
+    if enroled:
+        entries = db.getEntriesByEventIdJoinedUsers(session["user_id"], id, stats.lookup_key("open"))
+    
+    # Render the results
+    return render_template("event.html", event=event[0], entries=entries, user_id=session["user_id"], enroled=enroled, creator=creator)
+    
+def handle_enrol(id):
+    """Handle enroling"""
+    # Finding the event
+    event = db.getEventById(id, stats.lookup_key("open"))
+    # Ensure event exists
+    print(event, file=sys.stderr)
+    if len(event) == 0:
+        return apology("the event was not found")
+    # Ensure user hasn't enrolled already
+    # Create the search form
+    form = {
+        "user_id": session["user_id"],
+        "event_id": id,
+    }
+    rows = db.getEntryCustome(form)
+    if len(rows) != 0:
+        return apology("You have already enrolled in this event")
+
+    # Ensure event hasn't reached it's limit
+    if event[0]["enroled"] == event[0]["cap"]:
+        return apology("this event has reached it's limit")    
+    
+    # Ensure user is enroling for an event in their country
+    if  event[0]["country_id"] != session["user_country"]["id"]:
+        return apology("this event is not in your country")
+    
+    # Enrol the user
+    update_enroled = {
+        "enroled": event[0]["enroled"]+1
+    }
+    db.updateEventCustomById(id, update_enroled)
+    form["timestamp"] = right_now()
+    db.insertEntry(form)
+    # Flash the user
+    flash("successfully enrolled")
+    # Redirect to events
+    return redirect("/events")
+    

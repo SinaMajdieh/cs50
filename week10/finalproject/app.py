@@ -100,3 +100,33 @@ def edit_event(id):
     
     # Handle event eddinting
     return handle_edit_event(id)
+
+
+@app.route("/events")
+@login_required
+def events():
+    """Show user all the events they are a part of"""
+    
+    # Handle events
+    return handle_events()
+
+
+@app.route("/event/<id>")
+def event(id):
+    """Browse the event"""
+    
+    # Handle the event
+    return handle_event(id)
+
+
+# Routes declaration for enrolling
+@app.route("/enrol/<id>")
+@login_required
+def enroll(id):
+    """Let's user to enrol in events"""
+    
+    # Handle event enroling
+    return handle_enrol(id)
+
+
+    

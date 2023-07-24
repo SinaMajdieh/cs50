@@ -26,15 +26,63 @@ class Sqlitedb:
 
     # Functions on events table
     
+    
+    def getEventsUserEnroledAndAvailable(self, user_id, form, desc=True, joinedCountries=False, joinedCreator=False):
+        
+        order = "DESC"
+        if not desc:
+            order = "ASC"
+        joinedCountryQuery = ""
+        joinedCountryColumn = ""
+        if joinedCountries:
+            joinedCountryQuery = "JOIN countries ON events.country_id=countries.id "
+            joinedCountryColumn = ", countries.name AS country_name"
+        joinedCreatorQuery = ""
+        joinedCreatorColumn = ""    
+        if joinedCreator:
+            joinedCreatorQuery = "JOIN users ON events.creator_id=users.id "
+            joinedCreatorColumn = ", users.username AS username"  
+        clauses = []
+        values = [user_id]
+        for key in form:
+            if key in event_columns:
+                clauses.append("events." + key + " = ?")
+                values.append(form[key])
+        clause = " AND ".join(clauses)
+        query = f"""
+        SELECT events.* {joinedCountryColumn} {joinedCreatorColumn},
+            IIF(entry.user_id = ?, 
+                1,
+                IIF({clause},
+                    2,
+                    0
+                )  
+            ) display
+            FROM events 
+            JOIN entry ON events.id=entry.event_id
+            {joinedCountryQuery} 
+            {joinedCreatorQuery}
+            WHERE display != 0 GROUP BY events.id ORDER BY display ASC, date 
+        """ + order + ", events.timestamp DESC;"
+        return self.db.execute(query, *values)
+    
+    
+
     # Querry events table for all the columns where event id equals the id
-    def getEventById(self, id, state):
-        return self.db.execute(SELECT_ALL_EVENTS_BY_ID, id, state)
+    def getEventById(self, id, state, joinedCountries=False):
+        query = SELECT_ALL_EVENTS_BY_ID
+        if joinedCountries:
+            query = SELECT_ALL_EVENTS_BY_ID_JOIND_COUNTRIES
+        return self.db.execute(query, id, state)
+    
+    def getEventByIdJoinedUsers(self, id, state):
+        return self.db.execute(SELECT_ALL_EVENTS_BY_ID_JOINED_USERS, id, state)
     
     
     # Query events table for all the columns where creator id equals the id
     def getEventByUserId(self, id, state):
         return self.db.execute(SELECT_ALL_EVENTS_BY_USER_ID, id, state)
-    
+
     
     # Query events table to insert a new row of data in format of a dict    
     def insertEvent(self, form):
@@ -58,19 +106,28 @@ class Sqlitedb:
     
     
     # Query events table for all the columns where country id is given
-    def getEventsCustom(self, form, desc=True):
+    def getEventsCustom(self, form, desc=True, joinedCountries = False, joinedCreator = False):
         order = "DESC"
         if not desc:
             order = "ASC"
-            
-        query = "SELECT * FROM events"
+        joinedCountriesQuery = ""
+        joinedCountryColumn = ""
+        if joinedCountries:
+            joinedCountriesQuery = " JOIN countries ON events.country_id=countries.id "
+            joinedCountryColumn = " , countries.name AS country_name "
+        joinedCreatorQuery = ""
+        joinedCreatorColumn = ""    
+        if joinedCreator:
+            joinedCreatorQuery = " JOIN users ON events.creator_id=users.id "
+            joinedCreatorColumn = " , users.username AS username "  
+        query = "SELECT events.*" + joinedCountryColumn + joinedCreatorColumn + "FROM events" + joinedCountriesQuery + joinedCreatorQuery
         clauses = []
         values = []
         for key in form:
             if key in event_columns:
                 clauses.append(key + " = ?")
                 values.append(form[key])
-        query = query + " WHERE " + " AND ".join(clauses) + " ORDER BY date " + order + ";"
+        query = query + " WHERE " + " AND ".join(clauses) + " ORDER BY date " + order + ", events.timestamp DESC;"
         return self.db.execute(query, *values)
     
     
@@ -94,10 +151,15 @@ class Sqlitedb:
             return False
 
 
+    def selectEventUserEnroled(self, id):
+        return self.db.execute(SELECT_EVENTS_USER_ENROLED, id)
+
+
     # Delete an event (actually updating the state to delete) will not remove any rows
     def changeEventState(self, id, state_id):
         return self.db.execute(DELETE_EVENT, state_id, id)
-
+    
+    
     # Functions on entry table
     def insertEntry(self, form):
         self.db.execute(INSERT_ENTRY,
@@ -106,6 +168,25 @@ class Sqlitedb:
                         form["timestamp"],
                         )
     
+    
+    def getEntryCustome(self, form):
+        query = "SELECT * FROM entry"
+        clauses = []
+        values = []
+        for key in form:
+            if key in entry_columns:
+                clauses.append(key + " = ?")
+                values.append(form[key])
+        query = query + " WHERE " + " AND ".join(clauses) + ";"
+        return self.db.execute(query, *values)
+        
+
+    def getEntriesByEventIdJoinedUsers(self, user_id, event_id, state):
+        return self.db.execute(SELECT_ALL_ENTRIES_BY_EVENT_ID_JOINED_USERS, user_id, event_id, state)
+
+
+    def getEventsUserEnroled(self, user_id, state):
+        return self.db.execute(SELECT_EVENTS_USER_ENROLED, user_id, state)
 
     # Functions on description table
     
