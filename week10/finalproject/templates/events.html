@@ -12,7 +12,7 @@
             <input type="date" value={{ event["date"] }} readonly>
             <p>enroled: {{ event["enroled"] }}/{{ event["cap"] }}</p>
             <p>created on: {{ event["timestamp"] }}</p>
-            <p>Country:  event["country_name"]</p>
+            <p>Country:  {{ event["country_name"] }}</p>
             <a href="/leave/{{ event["id"]  }}"><button class="btn btn-danger btn-sm" type="button">leave</button></a>
             <br>
         {% endfor %}

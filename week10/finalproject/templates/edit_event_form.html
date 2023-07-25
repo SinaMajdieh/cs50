@@ -7,7 +7,7 @@
 {% block main %}
     <form action="/myevents/{{ form["id"] }}" method="post" id="addevent">
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="titel" name="title" placeholder="titel" type="text" value={{ form["title"] }}>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="titel" name="title" placeholder="titel" type="text" value="{{ form["title"] }}">
         </div>
         <div class="mb-3">
             <textarea autocomplete="off" autofocus class="form-control mx-auto w-auto" id="details" name="details" placeholder="details" cols="30" rows="10">{{ form["details"] }}</textarea>
@@ -28,7 +28,7 @@
         <br>
         <button class="btn btn-primary" type="submit">Update</button>
         <input name="delete" id="delete" hidden value="0">
-        <button class="btn btn-danger" type="button" onclick="deleteevent()">Delete</button>
+        <a href="/delete/{{ form["id"] }}"><button class="btn btn-danger" type="button">Delete</button></a>
     </form>
     <script>
         window.addEventListener("load", (event) => {

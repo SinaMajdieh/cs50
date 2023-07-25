@@ -38,7 +38,7 @@ SELECT events.* ,
         SELECT events.* , countries.name AS country_name , users.username AS username,
             IIF(entry.user_id = 12, 
                 1,
-                IIF(events.country_id = 184 AND events.date = '2023-07-26' AND events.state = 1,
+                IIF(events.country_id = 184 AND events.date = '2023-07-25' AND events.state = 1,
                     2,
                     0
                 )  

@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/home/sina/Documents/coding stuff/SinaMajdieh/cs50/week10/finalproject/venv/bin/python3" "$0" "$@"
-' '''
+#!/home/rhyme/Documents/coding/SinaMajdieh/cs50/week10/finalproject/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

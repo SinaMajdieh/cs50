@@ -8,6 +8,7 @@ def apology(message, code=400):
 
 
 def right_now():
+    """Returning the current time"""
     now = datetime.now()
     current_time = now.strftime("%d/%m/%Y %H:%M:%S")
     return current_time
@@ -28,6 +29,7 @@ def right_now():
 #             return True
 #     return False
     
+    
 def is_email_valid(email):
     """Ensure email is valid"""
     # Ensure email is str
@@ -42,15 +44,16 @@ def is_email_valid(email):
       return True
     else:
       return False
+ 
   
 def is_age_valid(age):
     """Ensure age input is valid"""
-    
     # Ensure age is int
     try:
         age = int(age)
     except ValueError:
         return False
+    
     # Ensure age is above 18
     if age >= 18:
         return True
@@ -82,7 +85,6 @@ def is_age_valid(age):
 #         return False
     
     
-
 def is_cap_valid(cap):
     """Ensure cap is valid"""
     # Ensure cap is an integer
@@ -90,6 +92,8 @@ def is_cap_valid(cap):
         cap = int(cap)
     except ValueError:
         return False
+    
+    # Ensure user is old enough
     if cap <= 20:
         return True
     else:
