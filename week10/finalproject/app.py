@@ -6,9 +6,10 @@ from indexRouteHelper import *
 from loggingRoutesHelper import *
 from eventsRouteHelper import *
 from enrolRouteHelper import *
-from shared import initial_database
+from browseRouteHelper import *
+import shared
 
-initial_database()
+shared.initial_database()
 
 app = Flask(__name__)
 
@@ -40,6 +41,12 @@ def login_required(f):
             return redirect("/login")
         return f(*args, **kwargs)
     return decorated_function
+
+
+# Adding browse options passed to layout template every time a route is visited
+@app.context_processor
+def insert_browse():
+    return dict(browseOptions=shared.tags.tags)
 
 
 # Index route declaration
@@ -153,4 +160,11 @@ def leave_event(id):
     # Handle leaving event
     return handle_leave(id)
 
-    
+
+# Browsing related routes declaration
+# -------------------------------------------------------------------
+@app.route("/browse/<name>")
+def browse(name):
+    """Browse event by the choosen tag"""
+    # Handle browse request
+    return handle_browse(name)    

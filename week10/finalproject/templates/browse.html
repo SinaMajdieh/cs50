@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <form action="/browse/{{ name }}" method="get">
+        <select name="country" id="country">
+            {% for country in countries %}
+                {% if country["id"] == defaultcountry["id"] %}
+                    <option selected value={{ country["id"] }}>{{ country["name"] }}</option>
+                {% else %}
+                    <option value={{ country["id"] }}>{{ country["name"] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <input type="date" name="date" id="date" value={{ date }}>
+        <button class="btn btn-primary" type="submit">filter</button>
+    </form>
+    <br><br><br>
+    {% if events %}
+        {% for event in events %}
+            <a href="/event/{{ event["id"] }}"><h2>{{ event["title"] }}</h2></a>
+            <h3>{{ event["details"] }}</h3>
+            <input type="date" value={{ event["date"] }} readonly>
+            <p>enroled: {{ event["enroled"] }}/{{ event["cap"] }}</p>
+            <p>created on: {{ event["timestamp"] }}</p>
+            <p>Country: {{ event["country_name"] }}</p>
+            <p>Created by: {{ event["username"] }}</p>
+            <br>
+        {% endfor %}
+    {% else %}
+        No events available
+    {% endif %}
+    
+{% endblock %}

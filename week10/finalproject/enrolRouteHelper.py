@@ -9,6 +9,10 @@ import shared
 
 
 def user_is_event_creator(event_id) -> bool:
+    # Ensure user has logged in
+    if "user_id" not in session:
+        return False
+    
     creator_form = {
         "creator_id": session["user_id"],
         "id": event_id,
@@ -20,6 +24,10 @@ def user_is_event_creator(event_id) -> bool:
 
 
 def user_is_enroled_in_event(event_id) -> bool:
+    # Ensure user has logged in
+    if "user_id" not in session:
+        return False
+    
     enrol_form = {
         "user_id": session["user_id"],
         "event_id": event_id,

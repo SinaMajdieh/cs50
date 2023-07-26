@@ -40,6 +40,19 @@ class Tags:
         else:
             return False
         
+        
+    def lookup_title(self, title):
+        """
+        Looks up a tag by its name
+        returning the tag if it was found
+        return None if it wasnt
+        """
+
+        for tag in self.tags:
+            if tag["title"] == title:
+                return tag
+            
+        return None
 
 class Countries:
     def __init__(self, value):

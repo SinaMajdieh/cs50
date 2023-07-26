@@ -191,6 +191,12 @@ def handle_events():
 
 def handle_event(id):
     """Handle event"""
+    # User hasnt logged in 
+    if "user_id" not in session:
+        visitor_id = -1
+    else:
+        visitor_id = session["user_id"]
+
     # Query for event 
     event = shared.db.getEventById(id, shared.stats.lookup_key("open"), joinedCountries=True)
     
@@ -202,17 +208,18 @@ def handle_event(id):
     creator = user_is_event_creator(id)
     enroled = True
 
+    # user is enroled
     if not creator:
       enroled = user_is_enroled_in_event(id)
-    # user is enroled
+    
     
     # Query for entries
     entries = []
     if enroled:
-        entries = shared.db.getEntriesByEventIdJoinedUsers(session["user_id"], id, shared.stats.lookup_key("open"))
+        entries = shared.db.getEntriesByEventIdJoinedUsers(visitor_id, id, shared.stats.lookup_key("open"))
     
     # Render the results
-    return render_template("event.html", event=event[0], entries=entries, user_id=session["user_id"], enroled=enroled, creator=creator)
+    return render_template("event.html", event=event[0], entries=entries, user_id=visitor_id, enroled=enroled, creator=creator)
 
 
 def handle_delete_event(id):

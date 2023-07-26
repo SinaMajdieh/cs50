@@ -135,7 +135,7 @@ class Sqlitedb:
     
     
     # Query events table for all the columns where country id is given
-    def getEventsCustom(self, form, desc=True, joinedCountries = False, joinedCreator = False):
+    def getEventsCustom(self, form, desc=True, joinedCountries = False, joinedCreator = False, hasTag=False, tag=""):
         # Determinig the order
         order = "DESC"
         if not desc:
@@ -159,6 +159,12 @@ class Sqlitedb:
             # Adding the quert for including the creator
             joinedCreatorColumn = " , users.username AS username "  
         
+        # Determining if tag selection should be applied
+        tagQuery = ""
+        if hasTag:
+            tag = "%"+tag+"%"
+            tagQuery = " AND tags LIKE ?"
+        
         # Constructing the query 
         query = "SELECT events.*" + joinedCountryColumn + joinedCreatorColumn + "FROM events" + joinedCountriesQuery + joinedCreatorQuery
         
@@ -171,9 +177,12 @@ class Sqlitedb:
             if key in event_columns:
                 clauses.append(key + " = ?")
                 values.append(form[key])
-                
+        
+        if tag != "":
+            values.append(tag)
+        
         # Joining the dynamic clauses
-        query = query + " WHERE " + " AND ".join(clauses) + " ORDER BY date " + order + ", events.timestamp DESC;"
+        query = query + " WHERE " + " AND ".join(clauses) + tagQuery + " ORDER BY date " + order + ", events.timestamp DESC;"
         
         # Executing the query
         return self.db.execute(query, *values)
