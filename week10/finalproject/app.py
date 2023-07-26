@@ -42,7 +42,7 @@ def login_required(f):
     return decorated_function
 
 
-# Index route  declaration
+# Index route declaration
 # -------------------------------------------------------------------
 @app.route("/")
 def index():
